@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MediaServer\Config;
+namespace Config;
 
 use MediaServer\Config\Contract\Config as ConfigInterface;
 
