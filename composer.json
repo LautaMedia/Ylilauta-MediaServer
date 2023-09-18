@@ -1,0 +1,31 @@
+{
+  "name": "lautamedia/media-server",
+  "description": "Media server for Ylilauta",
+  "require": {
+    "php": ">=8.1",
+    "ext-imagick": "*",
+    "ext-curl": "*",
+    "ext-fileinfo": "*",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "vimeo/psalm": "^4.9.0",
+    "ext-dom": "*",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "MediaServer\\": "src/",
+      "Config\\": "config/"
+    }
+  },
+  "replace": {
+    "symfony/polyfill-ctype": "*",
+    "symfony/polyfill-mbstring": "*",
+    "symfony/polyfill-intl-grapheme": "*",
+    "symfony/polyfill-intl-normalizer": "*",
+    "symfony/polyfill-php73": "*",
+    "symfony/polyfill-php80": "*"
+  }
+}
