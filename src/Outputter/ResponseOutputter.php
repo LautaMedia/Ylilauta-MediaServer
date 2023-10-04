@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MediaServer\Outputter;
 
+use MediaServer\Config\Contract\Config;
 use MediaServer\HttpMessage\Contract\Request as RequestInterface;
 use MediaServer\HttpMessage\Contract\RequestHandler;
 use MediaServer\HttpMessage\Message\Response;
@@ -28,8 +29,9 @@ use function unlink;
 final class ResponseOutputter
 {
     public function __construct(
-        private RequestInterface $request,
-        private RequestHandler $handler,
+        private readonly Config $cfg,
+        private readonly RequestInterface $request,
+        private readonly RequestHandler $handler,
     ) {
     }
 
@@ -128,7 +130,9 @@ final class ResponseOutputter
     private function sendFile(string $file): void
     {
         readfile($file);
-        unlink($file);
+        if ($this->cfg->useRemoteFileSource()) {
+            unlink($file);
+        }
     }
 
     private function sendFileRange(string $file, int $startOffset, int $endOffset): void
@@ -150,6 +154,8 @@ final class ResponseOutputter
         }
 
         fclose($fh);
-        unlink($file);
+        if ($this->cfg->useRemoteFileSource()) {
+            unlink($file);
+        }
     }
 }

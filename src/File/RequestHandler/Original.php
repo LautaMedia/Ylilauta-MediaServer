@@ -19,7 +19,11 @@ final class Original implements RequestHandler
 
     public function handle(Request $request): ResponseInterface
     {
-        $file = (new Downloader($this->cfg->fileSourceUrl() . $request->uri()->path()))->download();
+        if ($this->cfg->useRemoteFileSource()) {
+            $file = (new Downloader($this->cfg->remoteFileSourceUrl() . $request->uri()->path()))->download();
+        } else {
+            $file = $this->cfg->localFileSourcePath() . $request->uri()->path();
+        }
 
         return new Response(
             $file,

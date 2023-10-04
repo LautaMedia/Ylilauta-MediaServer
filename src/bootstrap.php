@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Config\Config;
 use MediaServer\HttpMessage\Message\Headers;
 use MediaServer\HttpMessage\Message\Request;
 use MediaServer\HttpMessage\Message\UploadedFile;
@@ -30,4 +31,5 @@ $request = new Request(
     $_POST
 );
 
-(new ResponseOutputter($request, new Route()))->output();
+$cfg = new Config();
+(new ResponseOutputter($cfg, $request, new Route($cfg)))->output();

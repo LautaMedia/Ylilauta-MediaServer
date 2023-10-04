@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace MediaServer;
 
-use Config\Config;
+use MediaServer\Config\Contract\Config;
 use MediaServer\File\RequestHandler\DeleteNginxCache;
 use MediaServer\File\RequestHandler\Original;
 use MediaServer\File\RequestHandler\ThumbImage;
@@ -22,6 +22,10 @@ use function in_array;
 
 final class Route implements RequestHandler
 {
+    public function __construct(private readonly Config $cfg)
+    {
+    }
+
     public function handle(Request $request): ResponseInterface
     {
         if (!in_array($request->method(), ['GET', 'DELETE'])) {
@@ -29,12 +33,12 @@ final class Route implements RequestHandler
                 'Allow' => ['GET'],
             ]);
         }
-        $cfg = new Config();
 
         if ($request->uri()->path() === '/') {
-            return new EmptyResponse(301, ['Location' => [$cfg->redirectRootTo()]]);
+            return new EmptyResponse(301, ['Location' => [$this->cfg->redirectRootTo()]]);
         }
 
+        $cfg = $this->cfg;
         $route = new StringMatch($request->method(), [
             'GET' => static fn() => new RequestValidator(
                 $cfg, new RegexMatch($request->uri()->path(), [

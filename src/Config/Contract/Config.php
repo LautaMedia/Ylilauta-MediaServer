@@ -9,7 +9,11 @@ interface Config
 
     public function allowOrigin(): string;
 
-    public function fileSourceUrl(): string;
+    public function localFileSourcePath(): string;
+
+    public function useRemoteFileSource(): bool;
+
+    public function remoteFileSourceUrl(): string;
 
     public function cachePath(): string;
 

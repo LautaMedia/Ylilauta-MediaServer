@@ -12,8 +12,8 @@ use function mime_content_type;
 final class FileResponseHeaders
 {
     public function __construct(
-        private Config $cfg,
-        private string $file,
+        private readonly Config $cfg,
+        private readonly string $file,
     ) {
     }
 

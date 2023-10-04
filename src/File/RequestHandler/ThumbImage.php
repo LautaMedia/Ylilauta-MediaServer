@@ -23,7 +23,6 @@ use function rename;
 use function shell_exec;
 use function sys_get_temp_dir;
 use function tempnam;
-use function var_dump;
 
 final class ThumbImage implements RequestHandler
 {
@@ -46,15 +45,22 @@ final class ThumbImage implements RequestHandler
             $format = 'jpg';
         }
 
-        $file = (new Downloader("{$this->cfg->fileSourceUrl()}{$basename}.{$format}"))->download();
+        if ($this->cfg->useRemoteFileSource()) {
+            $file = (new Downloader("{$this->cfg->remoteFileSourceUrl()}{$basename}.{$format}"))->download();
+        } else {
+            $file = "{$this->cfg->localFileSourcePath()}{$basename}.{$format}";
+        }
+
         try {
+            $outfile = tempnam(sys_get_temp_dir(), "thumb-{$format}{$width}-");
+
             if ($thumbFormat === 'avif') {
                 $fmt = 'jpg';
             } else {
                 $fmt = $thumbFormat;
             }
 
-            (new ImageMagick(sys_get_temp_dir(), $file))->scale(
+            (new ImageMagick(sys_get_temp_dir(), $file, $outfile))->scale(
                 (int)$width,
                 (int)$width,
                 $this->cfg->thumbQuality($fmt),
@@ -63,25 +69,28 @@ final class ThumbImage implements RequestHandler
 
             if ($thumbFormat === 'avif') {
                 $tempfile = tempnam(sys_get_temp_dir(), 'avifout-');
-                shell_exec('/usr/bin/avifenc --speed 9 ' . escapeshellarg($file) . ' ' . escapeshellarg($tempfile));
+                shell_exec('/usr/bin/avifenc --speed 9 ' . escapeshellarg($outfile) . ' ' . escapeshellarg($tempfile));
                 if (filesize($tempfile) === 0) {
                     unlink($tempfile);
                     throw new RuntimeException('avifenc failed');
                 }
-                rename($tempfile, $file);
+                rename($tempfile, $outfile);
             }
         } catch (Throwable $e) {
-            if (is_file($file)) {
-                unlink($file);
+            if (is_file($outfile)) {
+                unlink($outfile);
+            }
+            if (isset($tempfile) && is_file($tempfile)) {
+                unlink($tempfile);
             }
 
             throw new RuntimeException("Failed to scale {$basename}: {$e->getMessage()}", 1, $e);
         }
 
         return new Response(
-            $file,
+            $outfile,
             0,
-            (new FileResponseHeaders($this->cfg, $file))->headers()
+            (new FileResponseHeaders($this->cfg, $outfile))->headers()
         );
     }
 }

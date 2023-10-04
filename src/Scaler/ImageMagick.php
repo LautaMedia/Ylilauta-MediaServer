@@ -6,6 +6,7 @@ namespace MediaServer\Scaler;
 use Imagick;
 use ImagickException;
 use RuntimeException;
+use Throwable;
 
 use function filesize;
 use function in_array;
@@ -18,8 +19,9 @@ use function unlink;
 final class ImageMagick
 {
     public function __construct(
-        private string $tempDir,
-        private string $file
+        private readonly string $tempDir,
+        private readonly string $inFile,
+        private readonly string $outFile,
     ) {
     }
 
@@ -46,7 +48,16 @@ final class ImageMagick
         Imagick::setResourceLimit(imagick::RESOURCETYPE_DISK, 512 * 1024 * 1024);
 
         $im = new Imagick();
-        $im->readImage($this->file);
+        try {
+            $im->readImage($this->inFile);
+        } catch (Throwable $e) {
+            if (is_file($scaledTempFile)) {
+                unlink($scaledTempFile);
+            }
+
+            throw new RuntimeException('Image scaling failed', 500, $e);
+        }
+
         $im->setImagePage(0, 0, 0, 0);
         $im->thumbnailImage(min($im->getImageWidth(), $width), min($im->getImageHeight(), $height), true);
         $im->stripImage();
@@ -65,6 +76,6 @@ final class ImageMagick
             throw new RuntimeException('Image scaling failed', 500);
         }
 
-        rename($scaledTempFile, $this->file);
+        rename($scaledTempFile, $this->outFile);
     }
 }
