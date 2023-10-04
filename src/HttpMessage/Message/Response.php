@@ -16,8 +16,8 @@ final class Response implements ResponseInterface
      * @param array<string, array<int, string>> $headers
      */
     public function __construct(
-        private string $body = '',
-        private int $statusCode = 200,
+        private readonly string $body = '',
+        private readonly int $statusCode = 200,
         array $headers = []
     ) {
         $this->headers = new Headers($headers);

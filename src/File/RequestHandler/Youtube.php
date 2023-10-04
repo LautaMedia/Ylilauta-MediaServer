@@ -13,7 +13,7 @@ use MediaServer\HttpMessage\Message\Response;
 
 final class Youtube implements RequestHandler
 {
-    public function __construct(private Config $cfg)
+    public function __construct(private readonly Config $cfg)
     {
     }
 

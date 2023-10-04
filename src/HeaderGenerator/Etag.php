@@ -9,7 +9,7 @@ use function filesize;
 
 final class Etag
 {
-    public function __construct(private string $file)
+    public function __construct(private readonly string $file)
     {
     }
 

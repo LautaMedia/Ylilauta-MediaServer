@@ -16,7 +16,7 @@ use function unlink;
 
 final class DeleteNginxCache implements RequestHandler
 {
-    public function __construct(private Config $cfg)
+    public function __construct(private readonly Config $cfg)
     {
     }
 

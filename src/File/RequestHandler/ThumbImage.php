@@ -26,7 +26,7 @@ use function tempnam;
 
 final class ThumbImage implements RequestHandler
 {
-    public function __construct(private Config $cfg)
+    public function __construct(private readonly Config $cfg)
     {
     }
 

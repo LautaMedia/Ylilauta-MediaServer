@@ -14,8 +14,8 @@ use function in_array;
 final class ThumbSizeValidator implements RequestHandler
 {
     public function __construct(
-        private Config $cfg,
-        private RequestHandler $next
+        private readonly Config $cfg,
+        private readonly RequestHandler $next
     ) {
     }
 

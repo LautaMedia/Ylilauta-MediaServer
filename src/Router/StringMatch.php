@@ -15,8 +15,8 @@ final class StringMatch implements RequestHandler
      * @param array<string, callable> $routes
      */
     public function __construct(
-        private string $matchString,
-        private array $routes
+        private readonly string $matchString,
+        private readonly array $routes
     ) {
     }
 

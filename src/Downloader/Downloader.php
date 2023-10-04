@@ -24,7 +24,7 @@ use const LOCK_EX;
 
 final class Downloader
 {
-    public function __construct(private string $sourceUrl)
+    public function __construct(private readonly string $sourceUrl)
     {
     }
 

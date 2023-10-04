@@ -28,15 +28,15 @@ final class Request implements RequestInterface
      * @param array<string, string> $attributes
      */
     public function __construct(
-        private string $id,
+        private readonly string $id,
         private Headers $headers,
-        private string $method,
-        private Uri $uri,
-        private array $serverParams,
-        private array $cookies,
-        private array $queryParams,
-        private array $files,
-        private array $bodyParams,
+        private readonly string $method,
+        private readonly Uri $uri,
+        private readonly array $serverParams,
+        private readonly array $cookies,
+        private readonly array $queryParams,
+        private readonly array $files,
+        private readonly array $bodyParams,
         private array $attributes = []
     ) {
         $this->startTime = hrtime(true);

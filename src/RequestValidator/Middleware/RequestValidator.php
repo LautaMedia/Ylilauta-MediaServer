@@ -18,8 +18,8 @@ use const PATHINFO_EXTENSION;
 final class RequestValidator implements RequestHandler
 {
     public function __construct(
-        private Config $cfg,
-        private RequestHandler $next
+        private readonly Config $cfg,
+        private readonly RequestHandler $next
     ) {
     }
 

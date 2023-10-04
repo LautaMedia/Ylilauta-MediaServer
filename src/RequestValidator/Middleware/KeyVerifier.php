@@ -12,8 +12,8 @@ use MediaServer\HttpMessage\Message\EmptyResponse;
 final class KeyVerifier implements RequestHandler
 {
     public function __construct(
-        private Config $cfg,
-        private RequestHandler $next
+        private readonly Config $cfg,
+        private readonly RequestHandler $next
     ) {
     }
 

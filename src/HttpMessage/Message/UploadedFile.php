@@ -19,10 +19,10 @@ final class UploadedFile implements UploadedFileInterface
     private bool $moved = false;
 
     public function __construct(
-        private string $file,
-        private int $size,
-        private int $error,
-        private string $clientFilename
+        private readonly string $file,
+        private readonly int $size,
+        private readonly int $error,
+        private readonly string $clientFilename
     ) {
     }
 
