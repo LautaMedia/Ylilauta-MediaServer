@@ -51,6 +51,10 @@ final class ThumbImage implements RequestHandler
             $file = "{$this->cfg->localFileSourcePath()}{$basename}.{$format}";
         }
 
+        if (!is_file($file)) {
+            return new EmptyResponse(404);
+        }
+
         try {
             $outfile = tempnam(sys_get_temp_dir(), "thumb-{$format}{$width}-");
 
