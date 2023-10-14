@@ -19,7 +19,17 @@ final class Config implements ConfigInterface
         return 'http://localhost:8001/';
     }
 
-    public function fileSourceUrl(): string
+    public function localFileSourcePath(): string
+    {
+        return '/vagrant/files';
+    }
+
+    public function useRemoteFileSource(): bool
+    {
+        return true;
+    }
+
+    public function remoteFileSourceUrl(): string
     {
         // With vagrant you can check the ip you have when vagrant ssh'ing and use that
         return 'http://10.0.2.2:8001/files';
@@ -27,7 +37,7 @@ final class Config implements ConfigInterface
 
     public function cachePath(): string
     {
-        return dirname(__DIR__, 2) . '/cache';
+        return dirname(__DIR__) . '/cache';
     }
 
     public function cacheDeleteKey(): string
