@@ -9,6 +9,7 @@ use MediaServer\HeaderGenerator\FileResponseHeaders;
 use MediaServer\HttpMessage\Contract\Request;
 use MediaServer\HttpMessage\Contract\RequestHandler;
 use MediaServer\HttpMessage\Contract\Response as ResponseInterface;
+use MediaServer\HttpMessage\Message\EmptyResponse;
 use MediaServer\HttpMessage\Message\Response;
 
 final class Original implements RequestHandler
@@ -23,6 +24,10 @@ final class Original implements RequestHandler
             $file = (new Downloader($this->cfg->remoteFileSourceUrl() . $request->uri()->path()))->download();
         } else {
             $file = $this->cfg->localFileSourcePath() . $request->uri()->path();
+        }
+
+        if (!is_file($file)) {
+            return new EmptyResponse(404);
         }
 
         return new Response(
