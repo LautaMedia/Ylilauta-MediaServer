@@ -80,7 +80,7 @@ final class ResponseOutputter
             }
 
             $this->sendFile($response->body());
-            if ($this->response->statusCode() === 1) {
+            if ($response->statusCode() === 1) {
                 unlink($file);
             }
 
@@ -128,7 +128,7 @@ final class ResponseOutputter
         }
 
         $this->sendFileRange($response->body(), $startOffset, $endOffset);
-        if ($this->response->statusCode() === 1) {
+        if ($response->statusCode() === 1) {
             unlink($file);
         }
     }
