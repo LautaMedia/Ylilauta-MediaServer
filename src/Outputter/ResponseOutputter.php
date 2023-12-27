@@ -53,7 +53,7 @@ final class ResponseOutputter
                     $responseText = 'Oh no! It\'s broken! Please wait while we fix it...';
                 }
 
-                $response = new Response($responseText, $e->getCode() === 0 ? 500 : $e->getCode());
+                $response = new Response($responseText, ($e->getCode() === 0 || $e->getCode() === 1) ? 500 : $e->getCode());
             }
         }
 
