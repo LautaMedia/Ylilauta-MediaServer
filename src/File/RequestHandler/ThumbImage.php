@@ -56,7 +56,7 @@ final class ThumbImage implements RequestHandler
         }
 
         try {
-            $outfile = tempnam(sys_get_temp_dir(), "thumb-{$format}{$width}-");
+            $outfile = tempnam(sys_get_temp_dir(), "lauta-mediaserver-thumb-{$format}{$width}-");
 
             if ($thumbFormat === 'avif') {
                 $fmt = 'jpg';
@@ -71,8 +71,12 @@ final class ThumbImage implements RequestHandler
                 $fmt
             );
 
+            if ($this->cfg->useRemoteFileSource()) {
+                unlink($file);
+            }
+
             if ($thumbFormat === 'avif') {
-                $tempfile = tempnam(sys_get_temp_dir(), 'avifout-');
+                $tempfile = tempnam(sys_get_temp_dir(), 'lauta-mediaserver-avifout-');
                 shell_exec('/usr/bin/avifenc --speed 9 ' . escapeshellarg($outfile) . ' ' . escapeshellarg($tempfile));
                 if (filesize($tempfile) === 0) {
                     unlink($tempfile);
@@ -93,7 +97,7 @@ final class ThumbImage implements RequestHandler
 
         return new Response(
             $outfile,
-            0,
+            1, // 1 to delete $file after readfile()
             (new FileResponseHeaders($this->cfg, $outfile))->headers()
         );
     }

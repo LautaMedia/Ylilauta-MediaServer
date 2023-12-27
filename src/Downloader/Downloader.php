@@ -32,7 +32,7 @@ final class Downloader
     {
         $failTitle = "Could not download file from '{$this->sourceUrl}'";
 
-        $tempFile = tempnam(sys_get_temp_dir(), 'lauta-');
+        $tempFile = tempnam(sys_get_temp_dir(), 'lauta-mediaserver-download-');
         $fp = fopen($tempFile, 'wb');
 
         if (!$fp || !flock($fp, LOCK_EX)) {

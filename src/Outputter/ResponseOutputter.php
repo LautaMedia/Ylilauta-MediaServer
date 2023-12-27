@@ -60,7 +60,7 @@ final class ResponseOutputter
         $range = ($this->request->header('Range')[0] ?? '');
         $isPartial = $range !== '';
 
-        if ($response->statusCode() !== 0) {
+        if ($response->statusCode() !== 0 && $response->statusCode() !== 1) {
             http_response_code($response->statusCode());
             foreach ($response->headers() as $name => $values) {
                 foreach ($values as $value) {
@@ -80,6 +80,9 @@ final class ResponseOutputter
             }
 
             $this->sendFile($response->body());
+            if ($this->response->statusCode() === 1) {
+                unlink($file);
+            }
 
             return;
         }
@@ -125,14 +128,14 @@ final class ResponseOutputter
         }
 
         $this->sendFileRange($response->body(), $startOffset, $endOffset);
+        if ($this->response->statusCode() === 1) {
+            unlink($file);
+        }
     }
 
     private function sendFile(string $file): void
     {
         readfile($file);
-        if ($this->cfg->useRemoteFileSource()) {
-            unlink($file);
-        }
     }
 
     private function sendFileRange(string $file, int $startOffset, int $endOffset): void
@@ -154,8 +157,5 @@ final class ResponseOutputter
         }
 
         fclose($fh);
-        if ($this->cfg->useRemoteFileSource()) {
-            unlink($file);
-        }
     }
 }

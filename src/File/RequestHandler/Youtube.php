@@ -26,7 +26,7 @@ final class Youtube implements RequestHandler
 
         return new Response(
             $file,
-            0,
+            1, // 1 to delete $file after readfile()
             (new FileResponseHeaders($this->cfg, $file))->headers()
         );
     }

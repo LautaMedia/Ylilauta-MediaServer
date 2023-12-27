@@ -32,7 +32,7 @@ final class Original implements RequestHandler
 
         return new Response(
             $file,
-            0,
+            $this->cfg->useRemoteFileSource() ? 1 : 0, // 1 to delete $file after readfile()
             (new FileResponseHeaders($this->cfg, $file))->headers()
         );
     }
