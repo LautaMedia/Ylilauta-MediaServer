@@ -1,10 +1,12 @@
-Vagrant.require_version ">= 2.2.19"
+Vagrant.require_version ">= 2.4.1"
 Vagrant.configure(2) do |config|
     # Base box
     config.vm.box = "ubuntu/jammy64"
 
-    # Port forwardings
+    # Network
+    config.vm.network "private_network", ip: "10.0.3.3", virtualbox__intnet: true
     config.vm.network "forwarded_port", guest: 8002, host: 8002, id: "http"
+    config.vm.synced_folder ".", "/vagrant", disabled: false
 
     # Virtual machine details
     config.vm.provider "virtualbox" do |vb|
@@ -21,8 +23,6 @@ Vagrant.configure(2) do |config|
             vb.customize ["modifyvm", :id, "--uartmode1", "file", "/dev/null"]
         end
     end
-
-    config.vm.synced_folder ".", "/vagrant", disabled: false
 
     # Provisioning
     config.vm.provision "shell", path: "vagrant-provision.sh"
