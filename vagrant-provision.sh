@@ -9,7 +9,7 @@ update-locale LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 apt update
 apt install -y nginx
-apt install -y imagemagick webp
+apt install -y imagemagick webp libavif-bin
 apt install -y php${PHPVER}-fpm php${PHPVER}-gd php${PHPVER}-curl php${PHPVER}-imagick
 
 # Dev only requirements
