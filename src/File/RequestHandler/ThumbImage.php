@@ -42,7 +42,7 @@ final class ThumbImage implements RequestHandler
         }
 
         if ($format === 'mp4') {
-            $format = 'jpg';
+            $format = 'avif';
         }
 
         if ($this->cfg->useRemoteFileSource()) {
@@ -73,6 +73,11 @@ final class ThumbImage implements RequestHandler
 
             if ($this->cfg->useRemoteFileSource()) {
                 unlink($file);
+            }
+
+            if (filesize($outfile) === 0) {
+                unlink($outfile);
+                throw new RuntimeException('imagemagick failed');
             }
 
             if ($thumbFormat === 'avif') {
