@@ -200,7 +200,7 @@ EOF
     /usr/bin/rsync -avzL -e ssh ${CERTSTORE}:/etc/ssl/ylilauta-mediaserver/* /etc/ssl/${SERVERNAME}
     cd /srv/www/${SERVERNAME}
     rm -r public/
-    git clone git@github.com:LautaMedia/Ylilauta-MediaServer .
+    git clone https://github.com/LautaMedia/Ylilauta-MediaServer.git .
     cp -n /srv/www/${SERVERNAME}/Config.sample /srv/www/${SERVERNAME}/src/Config/Config.php
 
     chown -R 33:33 /srv/www
