@@ -41,7 +41,7 @@ final class Route implements RequestHandler
 
         $cfg = $this->cfg;
         $route = new StringMatch($request->method(), [
-            'GET' => static fn() => new RequestValidator($cfg, new ConcurrencyLimiter(
+            'GET' => static fn() => new RequestValidator($cfg, new ConcurrencyLimiter($cfg,
                 new RegexMatch($request->uri()->path(), [
                     '^/ytimg(?<live>_live)?/(?<videoId>[a-zA-Z0-9\-_]+).jpg$' => static fn() => new Youtube($cfg),
                     '^/[0-9a-f]{2}/[0-9a-f]{2}/(?<filename>[0-9a-f]{16})\.(?<extension>[0-9a-z]+)$' => static fn(
