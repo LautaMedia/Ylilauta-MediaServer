@@ -84,12 +84,6 @@ function configure_nginx_vhost() {
     CERTSTORE='https://certstore.example.com'
     STORAGE='https://storage.example.com'
 
-    echo "Please enter a server name, lowercase letters and dashes allowed."
-    echo "leave empty to use '${SERVERNAME}'"
-    read -r -p "Server name: "
-    if [ -n "${REPLY}" ] ; then
-        SERVERNAME=${REPLY}
-    fi
     echo "Please enter certstore URL."
     echo "Leave empty to use '${CERTSTORE}'"
     read -r -p "Certstore URL: "
@@ -143,7 +137,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
     }
 }
 
@@ -175,7 +169,7 @@ server {
         fastcgi_cache_use_stale error timeout updating http_500 http_503;
         fastcgi_ignore_client_abort on;
         add_header 'X-Cache-Status' \$upstream_cache_status always;
-        fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
     }
 }
 EOF
@@ -198,8 +192,8 @@ EOF
     read -r -p "Press enter to continue..."
 
     /usr/bin/rsync -avzL -e ssh ${CERTSTORE}:/etc/ssl/ylilauta-mediaserver/* /etc/ssl/${SERVERNAME}
+    mkdir -p /srv/www/${SERVERNAME}
     cd /srv/www/${SERVERNAME}
-    rm -r public/
     git clone https://github.com/LautaMedia/Ylilauta-MediaServer.git .
     cp -n /srv/www/${SERVERNAME}/Config.sample /srv/www/${SERVERNAME}/src/Config/Config.php
 
@@ -221,17 +215,17 @@ EOF
 }
 
 function install_php() {
-    apt install -y imagemagick webp php8.0-fpm php8.0-gd php8.0-curl php8.0-imagick
+    apt install -y imagemagick webp php8.2-fpm php8.2-gd php8.2-curl php8.2-imagick
 
-    sed -i -e 's/pm = dynamic/pm = static/g' /etc/php/8.0/fpm/pool.d/www.conf
-    sed -i -e 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php/8.0/fpm/pool.d/www.conf
-    sed -i -e 's/;pm.max_requests = 500/pm.max_requests = 10000/g' /etc/php/8.0/fpm/pool.d/www.conf
+    sed -i -e 's/pm = dynamic/pm = static/g' /etc/php/8.2/fpm/pool.d/www.conf
+    sed -i -e 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php/8.2/fpm/pool.d/www.conf
+    sed -i -e 's/;pm.max_requests = 500/pm.max_requests = 10000/g' /etc/php/8.2/fpm/pool.d/www.conf
 
-    sed -i -e 's/;opcache.enable=1/opcache.enable=1/g' /etc/php/8.0/fpm/php.ini
-    sed -i -e 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g' /etc/php/8.0/fpm/php.ini
-    sed -i -e 's/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/g' /etc/php/8.0/fpm/php.ini
+    sed -i -e 's/;opcache.enable=1/opcache.enable=1/g' /etc/php/8.2/fpm/php.ini
+    sed -i -e 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g' /etc/php/8.2/fpm/php.ini
+    sed -i -e 's/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/g' /etc/php/8.2/fpm/php.ini
 
-    service php8.0-fpm restart
+    service php8.2-fpm restart
 }
 
 if [[ ! $(which php) ]]; then
