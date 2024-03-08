@@ -134,7 +134,7 @@ server {
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
     }
 }
 
@@ -166,7 +166,7 @@ server {
         fastcgi_cache_use_stale error timeout updating http_500 http_503;
         fastcgi_ignore_client_abort on;
         add_header 'X-Cache-Status' \$upstream_cache_status always;
-        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
     }
 }
 EOF
@@ -213,21 +213,28 @@ EOF
 }
 
 function install_php() {
-    apt install -y imagemagick webp php8.2-fpm php8.2-gd php8.2-curl php8.2-imagick
+    apt install -y imagemagick webp php8.3-fpm php8.3-gd php8.3-curl php8.3-imagick
 
-    sed -i -e 's/pm = dynamic/pm = static/g' /etc/php/8.2/fpm/pool.d/www.conf
-    sed -i -e 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php/8.2/fpm/pool.d/www.conf
-    sed -i -e 's/;pm.max_requests = 500/pm.max_requests = 10000/g' /etc/php/8.2/fpm/pool.d/www.conf
+    sed -i -e 's/pm = dynamic/pm = static/g' /etc/php/8.3/fpm/pool.d/www.conf
+    sed -i -e 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php/8.3/fpm/pool.d/www.conf
+    sed -i -e 's/;pm.max_requests = 500/pm.max_requests = 10000/g' /etc/php/8.3/fpm/pool.d/www.conf
 
-    sed -i -e 's/;opcache.enable=1/opcache.enable=1/g' /etc/php/8.2/fpm/php.ini
-    sed -i -e 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g' /etc/php/8.2/fpm/php.ini
-    sed -i -e 's/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/g' /etc/php/8.2/fpm/php.ini
+    sed -i -e 's/;opcache.enable=1/opcache.enable=1/g' /etc/php/8.3/fpm/php.ini
+    sed -i -e 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=0/g' /etc/php/8.3/fpm/php.ini
+    sed -i -e 's/;opcache.huge_code_pages=1/opcache.huge_code_pages=1/g' /etc/php/8.3/fpm/php.ini
 
-    service php8.2-fpm restart
+    service php8.3-fpm restart
+}
+
+function install_deps() {
+    apt install -y libavif-bin libheif-plugin-aomdec libheif-plugin-aomenc
 }
 
 if [[ ! $(which php) ]]; then
     install_php
+fi
+if [[ ! $(which avifenc) ]]; then
+    install_deps
 fi
 
 NGINX_WAS_ALREADY_INSTALLED='Y'
