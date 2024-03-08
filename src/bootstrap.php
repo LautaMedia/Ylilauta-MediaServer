@@ -9,6 +9,9 @@ use MediaServer\HttpMessage\Message\Uri;
 use MediaServer\Outputter\ResponseOutputter;
 use MediaServer\Route;
 
+// As we always want to generate the image and do cleanup
+ignore_user_abort(true);
+
 spl_autoload_register(static function (string $class) {
     /** @psalm-suppress UnresolvableInclude */
     require preg_replace(

@@ -22,8 +22,6 @@ final class DeleteNginxCache implements RequestHandler
 
     public function handle(Request $request): ResponseInterface
     {
-        ignore_user_abort(true);
-
         $filename = ltrim($request->uri()->path(), '/');
         $folder = "{$filename[0]}{$filename[1]}/{$filename[2]}{$filename[3]}";
 
