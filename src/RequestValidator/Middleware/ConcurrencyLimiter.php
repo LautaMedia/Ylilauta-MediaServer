@@ -13,6 +13,8 @@ use function fopen;
 use function md5;
 use function sys_get_temp_dir;
 
+use function unlink;
+
 use const LOCK_EX;
 use const LOCK_UN;
 
@@ -33,6 +35,7 @@ final class ConcurrencyLimiter implements RequestHandler
 
         flock($fh, LOCK_UN);
         fclose($fh);
+        unlink($lockfile);
 
         return $response;
     }
