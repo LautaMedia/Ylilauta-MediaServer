@@ -39,7 +39,7 @@ final class ImageMagick
             throw new RuntimeException("Unsupported file type: {$type}", 500);
         }
 
-        $scaledTempFile = tempnam($this->tempDir, 'lauta-mediaserver-scaled-');
+        $scaledTempFile = tempnam($this->tempDir, 'ylilauta-mediaserver-scaled-');
 
         Imagick::setResourceLimit(imagick::RESOURCETYPE_MEMORY, 128 * 1024 * 1024);
         Imagick::setResourceLimit(imagick::RESOURCETYPE_MAP, 256 * 1024 * 1024);

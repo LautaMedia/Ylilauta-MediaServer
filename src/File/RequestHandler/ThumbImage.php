@@ -56,7 +56,7 @@ final class ThumbImage implements RequestHandler
         }
 
         try {
-            $outfile = tempnam(sys_get_temp_dir(), "lauta-mediaserver-thumb-{$format}{$width}-");
+            $outfile = tempnam(sys_get_temp_dir(), "ylilauta-mediaserver-thumb-{$format}{$width}-");
 
             if ($thumbFormat === 'avif') {
                 $fmt = 'jpg';
@@ -81,7 +81,7 @@ final class ThumbImage implements RequestHandler
             }
 
             if ($thumbFormat === 'avif') {
-                $tempfile = tempnam(sys_get_temp_dir(), 'lauta-mediaserver-avifout-');
+                $tempfile = tempnam(sys_get_temp_dir(), 'ylilauta-mediaserver-avifout-');
                 shell_exec('/usr/bin/avifenc --speed ' . escapeshellarg($this->cfg->encodingPreset($fmt))
                     . ' -y 444 ' . escapeshellarg($outfile) . ' ' . escapeshellarg($tempfile));
                 if (filesize($tempfile) === 0) {
