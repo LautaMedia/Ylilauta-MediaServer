@@ -193,7 +193,7 @@ EOF
     mkdir -p /srv/www/${SERVERNAME}
     cd /srv/www/${SERVERNAME}
     git clone https://github.com/LautaMedia/Ylilauta-MediaServer.git .
-    cp -n /srv/www/${SERVERNAME}/Config.sample /srv/www/${SERVERNAME}/src/Config/Config.php
+    cp -n /srv/www/${SERVERNAME}/Config.sample /srv/www/${SERVERNAME}/config/Config.php
 
     chown -R 33:33 /srv/www
     chmod -R 774 /srv/www
