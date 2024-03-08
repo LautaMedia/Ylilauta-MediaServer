@@ -55,7 +55,7 @@ final class ImageMagick
                 unlink($scaledTempFile);
             }
 
-            throw new RuntimeException('Image scaling failed (1)', 500, $e);
+            throw new RuntimeException('Image scaling failed: ' . $e->getMessage(), 500, $e);
         }
 
         $im->setImagePage(0, 0, 0, 0);
@@ -73,7 +73,7 @@ final class ImageMagick
             if (is_file($scaledTempFile)) {
                 unlink($scaledTempFile);
             }
-            throw new RuntimeException('Image scaling failed (2)', 500);
+            throw new RuntimeException('Image scaling failed', 500);
         }
 
         rename($scaledTempFile, $this->outFile);
