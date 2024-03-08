@@ -23,6 +23,7 @@ use function rename;
 use function shell_exec;
 use function sys_get_temp_dir;
 use function tempnam;
+use function unlink;
 
 final class ThumbImage implements RequestHandler
 {
@@ -91,9 +92,14 @@ final class ThumbImage implements RequestHandler
                 rename($tempfile, $outfile);
             }
         } catch (Throwable $e) {
+            if ($this->cfg->useRemoteFileSource() && is_file($file)) {
+                unlink($file);
+            }
+
             if (is_file($outfile)) {
                 unlink($outfile);
             }
+
             if (isset($tempfile) && is_file($tempfile)) {
                 unlink($tempfile);
             }
