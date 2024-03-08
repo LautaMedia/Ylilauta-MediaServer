@@ -12,6 +12,7 @@ use MediaServer\HttpMessage\Contract\Request;
 use MediaServer\HttpMessage\Contract\RequestHandler;
 use MediaServer\HttpMessage\Contract\Response as ResponseInterface;
 use MediaServer\HttpMessage\Message\EmptyResponse;
+use MediaServer\RequestValidator\Middleware\ConcurrencyLimiter;
 use MediaServer\RequestValidator\Middleware\KeyVerifier;
 use MediaServer\RequestValidator\Middleware\RequestValidator;
 use MediaServer\RequestValidator\Middleware\ThumbSizeValidator;
@@ -40,8 +41,8 @@ final class Route implements RequestHandler
 
         $cfg = $this->cfg;
         $route = new StringMatch($request->method(), [
-            'GET' => static fn() => new RequestValidator(
-                $cfg, new RegexMatch($request->uri()->path(), [
+            'GET' => static fn() => new RequestValidator($cfg, new ConcurrencyLimiter(
+                new RegexMatch($request->uri()->path(), [
                     '^/ytimg(?<live>_live)?/(?<videoId>[a-zA-Z0-9\-_]+).jpg$' => static fn() => new Youtube($cfg),
                     '^/[0-9a-f]{2}/[0-9a-f]{2}/(?<filename>[0-9a-f]{16})\.(?<extension>[0-9a-z]+)$' => static fn(
                     ) => new Original($cfg),
@@ -50,7 +51,7 @@ final class Route implements RequestHandler
                         $cfg, new ThumbImage($cfg)
                     ),
                 ])
-            ),
+            )),
             'DELETE' => static fn() => new KeyVerifier($cfg, new DeleteNginxCache($cfg)),
         ]);
 
