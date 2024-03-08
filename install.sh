@@ -188,7 +188,8 @@ EOF
     echo
     read -r -p "Press enter to continue..."
 
-    /usr/bin/rsync -avzL -e ssh ${CERTSTORE}:/etc/ssl/ylilauta-mediaserver/* /etc/ssl/${SERVERNAME}
+    CERTSTOREDOMAIN=`echo ${CERTSTORE} | sed 's/http\(s:\|:\)\/\///'`
+    /usr/bin/rsync -avzL -e ssh ${CERTSTOREDOMAIN}:/etc/ssl/ylilauta-mediaserver/* /etc/ssl/${SERVERNAME}
     mkdir -p /srv/www/${SERVERNAME}
     cd /srv/www/${SERVERNAME}
     git clone https://github.com/LautaMedia/Ylilauta-MediaServer.git .
@@ -199,7 +200,7 @@ EOF
     git checkout .
     cat > /etc/cron.d/${SERVERNAME} <<EOF
 # Update certs
-0 0 * * * root /usr/bin/rsync -avzLq -e ssh ${CERTSTORE}:/etc/ssl/ylilauta-mediaserver/* /etc/ssl/${SERVERNAME}
+0 0 * * * root /usr/bin/rsync -avzLq -e ssh ${CERTSTOREDOMAIN}:/etc/ssl/ylilauta-mediaserver/* /etc/ssl/${SERVERNAME}
 11 0 * * * root /usr/sbin/service nginx reload
 EOF
 
