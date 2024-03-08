@@ -82,7 +82,8 @@ final class ThumbImage implements RequestHandler
 
             if ($thumbFormat === 'avif') {
                 $tempfile = tempnam(sys_get_temp_dir(), 'lauta-mediaserver-avifout-');
-                shell_exec('/usr/bin/avifenc --speed 9 -y 444 ' . escapeshellarg($outfile) . ' ' . escapeshellarg($tempfile));
+                shell_exec('/usr/bin/avifenc --speed ' . escapeshellarg($this->cfg->encodingPreset($fmt))
+                    . ' -y 444 ' . escapeshellarg($outfile) . ' ' . escapeshellarg($tempfile));
                 if (filesize($tempfile) === 0) {
                     unlink($tempfile);
                     throw new RuntimeException('avifenc failed');

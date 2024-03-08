@@ -21,6 +21,8 @@ interface Config
 
     public function thumbQuality(string $format): int;
 
+    public function encodingPreset(string $format): string;
+
     /**
      * @return array<int>
      */

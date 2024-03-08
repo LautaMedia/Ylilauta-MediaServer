@@ -64,6 +64,17 @@ final class Config implements ConfigInterface
         };
     }
 
+    public function encodingPreset(string $format): string
+    {
+        /*
+         * AVIF: 0 (best quality, slowest) - 9 (worst quality, fastest)
+         */
+
+        return match ($format) {
+            default => '5',
+        };
+    }
+
     public function allowedSizes(): array
     {
         return [

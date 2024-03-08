@@ -98,8 +98,7 @@ function configure_nginx_vhost() {
     fi
 
     cat > /etc/nginx/sites-available/${SERVERNAME} <<EOF
-#proxy_cache_path /var/cache/nginx levels=2:2 keys_zone=origin:10m max_size=10G inactive=60m use_temp_path=off;
-fastcgi_cache_path /srv/www/${SERVERNAME}/cache levels=2:2 keys_zone=files:100m inactive=1d max_size=500G min_free=10G;
+fastcgi_cache_path /srv/www/${SERVERNAME}/cache levels=2:2 keys_zone=files:100m inactive=60m max_size=500G min_free=10G;
 fastcgi_cache_key "\$request_uri";
 
 server {
@@ -110,8 +109,6 @@ server {
     access_log off;
 
     location / {
-#        proxy_cache origin;
-#        proxy_cache_lock on;
         proxy_pass ${STORAGE};
     }
 }
