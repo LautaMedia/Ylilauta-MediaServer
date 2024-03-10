@@ -124,16 +124,18 @@ server {
     location ~ "^/.well-known/acme-challenge/" {
         proxy_pass ${CERTSTORE};
     }
+
     location ~ "^/[a-z0-9]{16}\$" {
-        fastcgi_ignore_client_abort on;
         try_files \$uri /index.php;
     }
+
     location / {
         return 301 https://\$host\$request_uri;
     }
 
     location ~ \.php\$ {
         include snippets/fastcgi-php.conf;
+        fastcgi_ignore_client_abort on;
         fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
     }
 }
@@ -154,6 +156,14 @@ server {
 
     root /srv/www/${SERVERNAME}/public;
     try_files \$uri /index.php;
+
+    location ~ "^/[a-z0-9]{2}/[a-z0-9]{2}/([a-z0-9]{16})\.[a-z0-9]+\$" {
+        if (\$http_sec_fetch_dest = 'document') {
+            return 302 https://ylilauta.org/file/\$1;
+        }
+
+        try_files \$uri /index.php;
+    }
 
     location ~ /\. { return 404; }
     location ~ \.php\$ {
