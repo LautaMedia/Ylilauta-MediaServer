@@ -14,6 +14,7 @@ use function fclose;
 use function flock;
 use function fopen;
 use function is_file;
+use function set_time_limit;
 use function sys_get_temp_dir;
 use function tempnam;
 use function unlink;
@@ -39,10 +40,11 @@ final class Downloader
             throw new RuntimeException("{$failTitle}: failed to open or lock temp file");
         }
 
+        set_time_limit(600);
         $ch = curl_init($this->sourceUrl);
         curl_setopt($ch, CURLOPT_FILE, $fp);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 300);
 
         $curl = curl_exec($ch);
         $responseCode = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
